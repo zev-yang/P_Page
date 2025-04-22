@@ -74,74 +74,9 @@ export function getPostBySlug(slug: string): Post | null {
   }
 }
 
-export type TableOfContentsItem = {
-  id: string
-  title: string
-  level: number
-  children?: TableOfContentsItem[]
-}
-
-export type Category = {
-  name: string
-  count: number
-}
-
 export type Tag = {
   name: string
   count: number
-}
-
-function extractTableOfContents(content: string): TableOfContentsItem[] {
-  const headings = content.match(/^#{1,3} .+$/gm) || []
-  const toc: TableOfContentsItem[] = []
-  const stack: TableOfContentsItem[] = []
-
-  headings.forEach((heading) => {
-    const level = heading.match(/^#+/)?.[0].length || 1
-    const title = heading.replace(/^#+\s+/, '')
-    const id = title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '')
-
-    const item: TableOfContentsItem = {
-      id,
-      title,
-      level,
-    }
-
-    while (stack.length > 0 && stack[stack.length - 1].level >= level) {
-      stack.pop()
-    }
-
-    if (stack.length === 0) {
-      toc.push(item)
-    } else {
-      const parent = stack[stack.length - 1]
-      if (!parent.children) {
-        parent.children = []
-      }
-      parent.children.push(item)
-    }
-
-    stack.push(item)
-  })
-
-  return toc
-}
-
-export async function getAllCategories(): Promise<Category[]> {
-  const posts = await getAllPosts()
-  const categories = posts.reduce((acc, post) => {
-    const category = post.category
-    acc[category] = (acc[category] || 0) + 1
-    return acc
-  }, {} as Record<string, number>)
-
-  return Object.entries(categories).map(([name, count]) => ({
-    name,
-    count,
-  }))
 }
 
 export async function getAllTags(): Promise<Tag[]> {
@@ -159,11 +94,6 @@ export async function getAllTags(): Promise<Tag[]> {
   }))
 }
 
-export async function getPostsByCategory(category: string): Promise<Post[]> {
-  const posts = await getAllPosts()
-  return posts.filter((post) => post.category === category)
-}
-
 export async function getPostsByTag(tag: string): Promise<Post[]> {
   const posts = await getAllPosts()
   return posts.filter((post) => post.tags?.includes(tag))
@@ -179,11 +109,6 @@ export async function getRelatedPosts(
   // 计算相关度分数
   const scoredPosts = otherPosts.map((post) => {
     let score = 0
-
-    // 相同分类加 2 分
-    if (post.category === currentPost.category) {
-      score += 2
-    }
 
     // 相同标签每个加 1 分
     const commonTags = post.tags?.filter((tag) =>
