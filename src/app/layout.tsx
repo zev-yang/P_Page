@@ -1,25 +1,13 @@
-import React from 'react'
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import './globals.css'
-import { Navbar } from '@/components/Navbar'
-import { ThemeProvider } from '@/components/ThemeProvider'
+import { Inter } from 'next/font/google'
+import { ThemeProvider } from '@/components/theme-provider'
+import Navbar from '@/components/Navbar'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata: Metadata = {
-  title: '我的个人博客',
-  description: '使用 Next.js 和 Tailwind CSS 构建的个人博客',
-  keywords: ['博客', 'Next.js', 'React', 'TypeScript'],
-  authors: [{ name: '你的名字' }],
-  creator: '你的名字',
-  openGraph: {
-    type: 'website',
-    locale: 'zh_CN',
-    url: 'https://your-domain.com',
-    title: '我的个人博客',
-    description: '使用 Next.js 和 Tailwind CSS 构建的个人博客',
-  },
+export const metadata = {
+  title: 'My Blog',
+  description: 'A personal blog built with Next.js',
 }
 
 export default function RootLayout({
@@ -28,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="zh" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider
           attribute="class"
@@ -37,7 +25,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Navbar />
-          {children}
+          <main className="container mx-auto px-4 py-8">
+            {children}
+          </main>
         </ThemeProvider>
       </body>
     </html>
