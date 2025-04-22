@@ -1,44 +1,59 @@
-import React from 'react'
+"use client"
+
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ThemeToggle } from './ThemeToggle'
-import { Search } from './Search'
+import { MoonIcon, SunIcon } from 'lucide-react'
+import { useTheme } from 'next-themes'
 
-export function Navbar() {
+export default function Navbar() {
   const pathname = usePathname()
+  const { theme, setTheme } = useTheme()
+
+  const isActive = (path: string) => {
+    if (path === '/' && pathname !== '/') return false
+    return pathname.startsWith(path)
+  }
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 items-center">
-        <div className="mr-4 flex">
-          <Link href="/" className="mr-6 flex items-center space-x-2">
-            <span className="font-bold">我的博客</span>
+    <nav className="border-b">
+      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+        <div className="flex items-center space-x-8">
+          <Link
+            href="/"
+            className="text-lg font-semibold hover:text-primary transition-colors"
+          >
+            My Blog
           </Link>
-          <nav className="flex items-center space-x-6 text-sm font-medium">
-            <Link
-              href="/"
-              className={`transition-colors hover:text-foreground/80 ${
-                pathname === '/' ? 'text-foreground' : 'text-foreground/60'
-              }`}
-            >
-              首页
-            </Link>
+          <div className="flex items-center space-x-6">
             <Link
               href="/blog"
-              className={`transition-colors hover:text-foreground/80 ${
-                pathname === '/blog' ? 'text-foreground' : 'text-foreground/60'
+              className={`hover:text-primary transition-colors ${
+                isActive('/blog') ? 'text-primary font-medium' : ''
               }`}
             >
-              文章
+              Blog
             </Link>
-          </nav>
-        </div>
-        <div className="flex flex-1 items-center justify-end space-x-4">
-          <div className="w-[200px] lg:w-[300px]">
-            <Search />
+            <Link
+              href="/about"
+              className={`hover:text-primary transition-colors ${
+                isActive('/about') ? 'text-primary font-medium' : ''
+              }`}
+            >
+              About
+            </Link>
           </div>
-          <ThemeToggle />
         </div>
+        <button
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          className="p-2 hover:bg-accent rounded-md transition-colors"
+          aria-label="Toggle theme"
+        >
+          {theme === 'dark' ? (
+            <SunIcon className="h-5 w-5" />
+          ) : (
+            <MoonIcon className="h-5 w-5" />
+          )}
+        </button>
       </div>
     </nav>
   )
