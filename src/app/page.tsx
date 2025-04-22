@@ -1,26 +1,26 @@
-import React from 'react'
-import Image from 'next/image'
+import Link from 'next/link'
 
 export default function Home() {
   return (
-    <main className="container mx-auto px-4 py-8">
-      <div className="flex flex-col items-center justify-center space-y-8 text-center">
-        <div className="relative h-32 w-32 overflow-hidden rounded-full">
-          <Image
-            src="/avatar.jpg"
-            alt="头像"
-            fill
-            className="object-cover"
-            priority
-          />
-        </div>
-        <div className="space-y-4">
-          <h1 className="text-4xl font-bold">你的名字</h1>
-          <p className="text-xl text-muted-foreground">
-            这里写一句简短的个人介绍
-          </p>
-        </div>
+    <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
+      <h1 className="text-4xl font-bold mb-6">Welcome to My Blog</h1>
+      <p className="text-xl mb-8 text-muted-foreground">
+        A personal blog built with Next.js and Tailwind CSS
+      </p>
+      <div className="flex gap-4">
+        <Link
+          href="/blog"
+          className="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90"
+        >
+          Read Blog
+        </Link>
+        <Link
+          href="/about"
+          className="inline-flex items-center justify-center rounded-md border border-input bg-background px-6 py-3 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground"
+        >
+          About Me
+        </Link>
       </div>
-    </main>
+    </div>
   )
 } 

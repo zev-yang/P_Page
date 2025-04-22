@@ -1,91 +1,45 @@
-import React from 'react'
 import Link from 'next/link'
-import { getAllPosts, getAllCategories, getAllTags } from '@/lib/blog'
+import { getAllPosts } from '@/lib/blog'
 
-export default async function BlogPage() {
-  const [posts, categories, tags] = await Promise.all([
-    getAllPosts(),
-    getAllCategories(),
-    getAllTags(),
-  ])
+export default function BlogPage() {
+  const posts = getAllPosts()
 
   return (
-    <main className="container mx-auto px-4 py-8">
-      <div className="grid gap-8 lg:grid-cols-[1fr_300px]">
-        <div>
-          <h1 className="mb-8 text-3xl font-bold">文章列表</h1>
-          <div className="grid gap-6">
-            {posts.map((post) => (
-              <article
-                key={post.slug}
-                className="rounded-lg border p-6 transition-colors hover:bg-muted/50"
+    <div className="space-y-8">
+      <h1 className="text-3xl font-bold">Blog Posts</h1>
+      <div className="grid gap-6 md:grid-cols-2">
+        {posts.map((post) => (
+          <article
+            key={post.slug}
+            className="group relative rounded-lg border p-6 hover:shadow-md transition-all"
+          >
+            <h2 className="text-2xl font-semibold mb-2">
+              <Link
+                href={`/blog/${post.slug}`}
+                className="hover:underline"
               >
-                <Link href={`/blog/${post.slug}`}>
-                  <h2 className="mb-2 text-2xl font-semibold">{post.title}</h2>
-                </Link>
-                <div className="mb-2 flex items-center gap-4 text-sm text-muted-foreground">
-                  <time>{post.date}</time>
-                  <span>•</span>
-                  <Link
-                    href={`/blog/category/${post.category}`}
-                    className="hover:text-foreground"
+                {post.title}
+              </Link>
+            </h2>
+            <div className="text-sm text-muted-foreground mb-4">
+              {post.date} · {post.readingTime}
+            </div>
+            <p className="text-muted-foreground">{post.excerpt}</p>
+            {post.tags && post.tags.length > 0 && (
+              <div className="mt-4 flex gap-2">
+                {post.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="inline-flex items-center rounded-full bg-secondary px-2.5 py-0.5 text-xs font-medium text-secondary-foreground"
                   >
-                    {post.category}
-                  </Link>
-                </div>
-                <p className="mb-4 text-muted-foreground">{post.excerpt}</p>
-                <div className="flex flex-wrap gap-2">
-                  {post.tags.map((tag) => (
-                    <Link
-                      key={tag}
-                      href={`/blog/tag/${tag}`}
-                      className="rounded-full bg-muted px-3 py-1 text-sm hover:bg-muted/80"
-                    >
-                      {tag}
-                    </Link>
-                  ))}
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-        <aside className="space-y-8">
-          <div>
-            <h2 className="mb-4 text-xl font-semibold">分类</h2>
-            <div className="space-y-2">
-              {categories.map((category) => (
-                <Link
-                  key={category.name}
-                  href={`/blog/category/${category.name}`}
-                  className="flex items-center justify-between rounded-lg p-2 hover:bg-muted"
-                >
-                  <span>{category.name}</span>
-                  <span className="text-sm text-muted-foreground">
-                    {category.count}
+                    {tag}
                   </span>
-                </Link>
-              ))}
-            </div>
-          </div>
-          <div>
-            <h2 className="mb-4 text-xl font-semibold">标签</h2>
-            <div className="flex flex-wrap gap-2">
-              {tags.map((tag) => (
-                <Link
-                  key={tag.name}
-                  href={`/blog/tag/${tag.name}`}
-                  className="rounded-full bg-muted px-3 py-1 text-sm hover:bg-muted/80"
-                >
-                  {tag.name}
-                  <span className="ml-1 text-xs text-muted-foreground">
-                    {tag.count}
-                  </span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </aside>
+                ))}
+              </div>
+            )}
+          </article>
+        ))}
       </div>
-    </main>
+    </div>
   )
 } 
