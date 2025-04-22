@@ -3,18 +3,75 @@ import path from 'path'
 import matter from 'gray-matter'
 import readingTime from 'reading-time'
 
-const postsDirectory = path.join(process.cwd(), 'src/content/blog')
-
-export type Post = {
-  slug: string
+export interface Post {
   title: string
   date: string
   excerpt: string
+  slug: string
   content: string
-  category: string
-  tags: string[]
   readingTime: string
-  tableOfContents: TableOfContentsItem[]
+  tags?: string[]
+}
+
+const postsDirectory = path.join(process.cwd(), 'src/content/blog')
+
+export function getAllPosts(): Post[] {
+  // 如果目录不存在，返回空数组
+  if (!fs.existsSync(postsDirectory)) {
+    return []
+  }
+
+  const fileNames = fs.readdirSync(postsDirectory)
+  const allPosts = fileNames
+    .filter(fileName => fileName.endsWith('.md'))
+    .map(fileName => {
+      const slug = fileName.replace(/\.md$/, '')
+      const fullPath = path.join(postsDirectory, fileName)
+      const fileContents = fs.readFileSync(fullPath, 'utf8')
+      const { data, content } = matter(fileContents)
+
+      const stats = readingTime(content)
+
+      return {
+        slug,
+        title: data.title || slug,
+        date: data.date ? new Date(data.date).toLocaleDateString() : 'No date',
+        excerpt: data.excerpt || '',
+        content,
+        readingTime: stats.text,
+        tags: data.tags || []
+      }
+    })
+
+  // Sort posts by date in descending order
+  return allPosts.sort((a, b) => {
+    if (a.date < b.date) {
+      return 1
+    } else {
+      return -1
+    }
+  })
+}
+
+export function getPostBySlug(slug: string): Post | null {
+  try {
+    const fullPath = path.join(postsDirectory, `${slug}.md`)
+    const fileContents = fs.readFileSync(fullPath, 'utf8')
+    const { data, content } = matter(fileContents)
+    const stats = readingTime(content)
+
+    return {
+      slug,
+      title: data.title || slug,
+      date: data.date ? new Date(data.date).toLocaleDateString() : 'No date',
+      excerpt: data.excerpt || '',
+      content,
+      readingTime: stats.text,
+      tags: data.tags || []
+    }
+  } catch {
+    return null
+  }
 }
 
 export type TableOfContentsItem = {
@@ -73,56 +130,6 @@ function extractTableOfContents(content: string): TableOfContentsItem[] {
   return toc
 }
 
-export async function getAllPosts(): Promise<Post[]> {
-  const fileNames = fs.readdirSync(postsDirectory)
-  const allPostsData = fileNames
-    .filter((fileName) => fileName.endsWith('.md'))
-    .map((fileName) => {
-      const slug = fileName.replace(/\.md$/, '')
-      const fullPath = path.join(postsDirectory, fileName)
-      const fileContents = fs.readFileSync(fullPath, 'utf8')
-      const { data, content } = matter(fileContents)
-      const stats = readingTime(content)
-
-      return {
-        slug,
-        title: data.title,
-        date: data.date,
-        excerpt: data.excerpt,
-        content,
-        category: data.category || '未分类',
-        tags: data.tags || [],
-        readingTime: stats.text,
-        tableOfContents: extractTableOfContents(content),
-      }
-    })
-
-  return allPostsData.sort((a, b) => (a.date < b.date ? 1 : -1))
-}
-
-export async function getPostBySlug(slug: string): Promise<Post | null> {
-  try {
-    const fullPath = path.join(postsDirectory, `${slug}.md`)
-    const fileContents = fs.readFileSync(fullPath, 'utf8')
-    const { data, content } = matter(fileContents)
-    const stats = readingTime(content)
-
-    return {
-      slug,
-      title: data.title,
-      date: data.date,
-      excerpt: data.excerpt,
-      content,
-      category: data.category || '未分类',
-      tags: data.tags || [],
-      readingTime: stats.text,
-      tableOfContents: extractTableOfContents(content),
-    }
-  } catch (error) {
-    return null
-  }
-}
-
 export async function getAllCategories(): Promise<Category[]> {
   const posts = await getAllPosts()
   const categories = posts.reduce((acc, post) => {
@@ -140,7 +147,7 @@ export async function getAllCategories(): Promise<Category[]> {
 export async function getAllTags(): Promise<Tag[]> {
   const posts = await getAllPosts()
   const tags = posts.reduce((acc, post) => {
-    post.tags.forEach((tag) => {
+    post.tags?.forEach((tag) => {
       acc[tag] = (acc[tag] || 0) + 1
     })
     return acc
@@ -159,7 +166,7 @@ export async function getPostsByCategory(category: string): Promise<Post[]> {
 
 export async function getPostsByTag(tag: string): Promise<Post[]> {
   const posts = await getAllPosts()
-  return posts.filter((post) => post.tags.includes(tag))
+  return posts.filter((post) => post.tags?.includes(tag))
 }
 
 export async function getRelatedPosts(
@@ -179,10 +186,10 @@ export async function getRelatedPosts(
     }
 
     // 相同标签每个加 1 分
-    const commonTags = post.tags.filter((tag) =>
-      currentPost.tags.includes(tag)
+    const commonTags = post.tags?.filter((tag) =>
+      currentPost.tags?.includes(tag)
     ).length
-    score += commonTags
+    score += commonTags || 0
 
     return { post, score }
   })

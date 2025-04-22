@@ -1,36 +1,42 @@
 ---
-title: '你好，世界！'
-date: '2024-04-22'
-excerpt: '这是我的第一篇博客文章，用来测试 Markdown 渲染功能。'
-category: '技术'
-tags: ['Next.js', 'React', 'Markdown']
+title: Hello World
+date: 2024-02-20
+excerpt: Welcome to my blog! This is my first post.
+tags: ['introduction', 'blog']
 ---
 
-# 你好，世界！
+# Hello World!
 
-这是我的第一篇博客文章。在这里，我将展示一些 Markdown 的基本功能。
+Welcome to my blog! This is my first post, and I'm excited to share my thoughts and experiences with you.
 
-## 代码示例
+## What to Expect
 
-```javascript
-function hello() {
-  console.log('Hello, World!');
+In this blog, I'll be writing about:
+
+- Web Development
+- React and Next.js
+- TypeScript
+- Best Practices
+- And more!
+
+## Stay Connected
+
+Feel free to follow me on [GitHub](https://github.com/zev-yang) to stay updated with my latest projects and blog posts.
+
+## Code Example
+
+Here's a simple React component:
+
+```tsx
+function Greeting({ name }: { name: string }) {
+  return (
+    <div className="text-center">
+      <h1 className="text-2xl font-bold">
+        Hello, {name}!
+      </h1>
+    </div>
+  )
 }
 ```
 
-## 列表
-
-- 项目 1
-- 项目 2
-- 项目 3
-
-## 引用
-
-> 这是一段引用文字。
-
-## 表格
-
-| 表头 1 | 表头 2 |
-|--------|--------|
-| 内容 1 | 内容 2 |
-| 内容 3 | 内容 4 | 
+I hope you find the content here helpful and interesting! 
