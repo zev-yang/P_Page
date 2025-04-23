@@ -6,13 +6,6 @@ const nextConfig = {
   },
   basePath: '/P_Page',
   assetPrefix: '/P_Page',
-  trailingSlash: true,
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
 }
 
 module.exports = nextConfig 
