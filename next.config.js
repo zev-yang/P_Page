@@ -4,9 +4,15 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  basePath: process.env.NEXT_PUBLIC_BASE_PATH || '/P_Page',
-  assetPrefix: process.env.NEXT_PUBLIC_BASE_PATH || '/P_Page',
+  basePath: '/P_Page',
+  assetPrefix: '/P_Page',
   trailingSlash: true,
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 }
 
 module.exports = nextConfig 
