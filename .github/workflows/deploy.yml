@@ -26,25 +26,31 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+          cache: 'npm'
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
 
       - name: Install dependencies
-        run: npm install
-
-      - name: Debug directory
         run: |
-          pwd
+          npm install
+          npm install sharp --save
+
+      - name: Show workspace
+        run: |
+          echo "Workspace contents:"
           ls -la
+          echo "Node version:"
+          node -v
+          echo "NPM version:"
+          npm -v
 
       - name: Build with Next.js
         run: |
+          echo "Starting build..."
           npm run build
-          ls -la
+          echo "Build completed. Checking output:"
           ls -la out/
-        env:
-          NEXT_PUBLIC_BASE_PATH: /P_Page
-
-      - name: Configure Pages
-        uses: actions/configure-pages@v4
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
