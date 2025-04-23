@@ -1,5 +1,6 @@
 name: Deploy Next.js site to Pages
 
+# This workflow will deploy your Next.js site to GitHub Pages
 on:
   push:
     branches: ["master"]
