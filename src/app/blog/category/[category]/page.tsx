@@ -3,6 +3,13 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getPostsByCategory, getAllCategories } from '@/lib/blog'
 
+export async function generateStaticParams() {
+  const categories = await getAllCategories()
+  return categories.map((category) => ({
+    category: category.name,
+  }))
+}
+
 export default async function CategoryPage({
   params,
 }: {
@@ -45,7 +52,7 @@ export default async function CategoryPage({
                 </div>
                 <p className="mb-4 text-muted-foreground">{post.excerpt}</p>
                 <div className="flex flex-wrap gap-2">
-                  {post.tags.map((tag) => (
+                  {post.tags?.map((tag) => (
                     <Link
                       key={tag}
                       href={`/blog/tag/${tag}`}
