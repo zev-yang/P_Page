@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { Suspense } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 
@@ -15,26 +15,17 @@ interface Post {
   category?: string
 }
 
-export default function SearchPage() {
+function SearchResults() {
   const searchParams = useSearchParams()
   const query = searchParams.get('q')?.toLowerCase() || ''
-  const [posts, setPosts] = useState<Post[]>([])
-  const [loading, setLoading] = useState(true)
+  const [posts, setPosts] = React.useState<Post[]>([])
 
-  useEffect(() => {
-    async function fetchPosts() {
-      try {
-        const response = await fetch('/api/posts')
-        const data = await response.json()
-        setPosts(data)
-      } catch (error) {
-        console.error('Error fetching posts:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchPosts()
+  React.useEffect(() => {
+    // In static export, we'll access the JSON file directly
+    fetch('/P_Page/api/posts.json')
+      .then(res => res.json())
+      .then(data => setPosts(data))
+      .catch(error => console.error('Error fetching posts:', error))
   }, [])
 
   const filteredPosts = posts.filter(
@@ -45,23 +36,8 @@ export default function SearchPage() {
       post.tags?.some((tag) => tag.toLowerCase().includes(query))
   )
 
-  if (loading) {
-    return (
-      <main className="container mx-auto px-4 py-8">
-        <div className="animate-pulse">
-          <div className="h-8 w-64 bg-muted rounded mb-8"></div>
-          <div className="space-y-4">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="h-40 bg-muted rounded"></div>
-            ))}
-          </div>
-        </div>
-      </main>
-    )
-  }
-
   return (
-    <main className="container mx-auto px-4 py-8">
+    <div>
       <h1 className="mb-8 text-3xl font-bold">
         搜索结果：{query}
       </h1>
@@ -103,6 +79,29 @@ export default function SearchPage() {
           ))}
         </div>
       )}
+    </div>
+  )
+}
+
+function SearchSkeleton() {
+  return (
+    <div className="animate-pulse">
+      <div className="h-8 w-64 bg-muted rounded mb-8"></div>
+      <div className="space-y-4">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="h-40 bg-muted rounded"></div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+export default function SearchPage() {
+  return (
+    <main className="container mx-auto px-4 py-8">
+      <Suspense fallback={<SearchSkeleton />}>
+        <SearchResults />
+      </Suspense>
     </main>
   )
 } 
