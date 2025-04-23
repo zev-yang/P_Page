@@ -45,7 +45,10 @@ export default function BlogPost({ params }: Props) {
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           rehypePlugins={[rehypeRaw, rehypeHighlight]}
-          className="markdown-content"
+          components={{
+            // This wrapper div will receive the className
+            div: ({ node, ...props }) => <div className="markdown-content" {...props} />
+          }}
         >
           {post.content}
         </ReactMarkdown>
