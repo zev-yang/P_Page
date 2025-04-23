@@ -27,58 +27,20 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Show environment
-        run: |
-          echo "Current directory:"
-          pwd
-          echo "Directory contents:"
-          ls -la
-          echo "Node version:"
-          node -v
-          echo "NPM version:"
-          npm -v
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
 
       - name: Install dependencies
         run: |
-          echo "Installing dependencies..."
-          npm install --verbose
-          echo "Dependencies installed successfully"
+          npm ci
+          npm install sharp
 
-      - name: Create .nojekyll file
-        run: touch .nojekyll
-
-      - name: Build Next.js app
+      - name: Build with Next.js
+        env:
+          NEXT_PUBLIC_BASE_PATH: /P_Page
         run: |
-          echo "Starting Next.js build..."
-          npm run build || {
-            echo "Build failed. Checking for error logs..."
-            if [ -f .next/error.log ]; then
-              echo "Content of .next/error.log:"
-              cat .next/error.log
-            fi
-            if [ -d .next ]; then
-              echo "Content of .next directory:"
-              ls -la .next/
-            fi
-            echo "Last 100 lines of npm logs:"
-            tail -n 100 ~/.npm/_logs/*-debug.log || true
-            exit 1
-          }
-
-      - name: List build output
-        if: always()
-        run: |
-          echo "Workspace contents after build:"
-          ls -la
-          if [ -d "out" ]; then
-            echo "Contents of out directory:"
-            ls -la out/
-          else
-            echo "out directory does not exist"
-          fi
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
+          npm run build
+          touch out/.nojekyll
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
