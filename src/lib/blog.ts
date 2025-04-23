@@ -14,6 +14,13 @@ export interface Post {
   category?: string
 }
 
+export interface TableOfContentsItem {
+  id: string
+  title: string
+  level: number
+  items?: TableOfContentsItem[]
+}
+
 const postsDirectory = path.join(process.cwd(), 'src/content/blog')
 
 export function getAllPosts(): Post[] {
@@ -30,7 +37,6 @@ export function getAllPosts(): Post[] {
       const fullPath = path.join(postsDirectory, fileName)
       const fileContents = fs.readFileSync(fullPath, 'utf8')
       const { data, content } = matter(fileContents)
-
       const stats = readingTime(content)
 
       return {
@@ -156,4 +162,38 @@ export async function getRelatedPosts(
     .sort((a, b) => b.score - a.score)
     .slice(0, limit)
     .map((item) => item.post)
+}
+
+export function generateTableOfContents(content: string): TableOfContentsItem[] {
+  const headingRegex = /^(#{1,6})\s+(.+)$/gm
+  const matches = Array.from(content.matchAll(headingRegex))
+  const items: TableOfContentsItem[] = []
+  const stack: TableOfContentsItem[][] = [items]
+
+  matches.forEach((match) => {
+    const level = match[1].length
+    const title = match[2]
+    const id = title.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+
+    const item: TableOfContentsItem = {
+      id,
+      title,
+      level,
+      items: [],
+    }
+
+    while (stack.length > level) {
+      stack.pop()
+    }
+    if (stack.length < level) {
+      const parent = stack[stack.length - 1]?.[stack[stack.length - 1].length - 1]
+      if (parent) {
+        stack.push(parent.items || [])
+      }
+    }
+
+    stack[stack.length - 1].push(item)
+  })
+
+  return items
 } 
