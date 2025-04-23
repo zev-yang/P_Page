@@ -3,6 +3,13 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getPostsByTag, getAllTags } from '@/lib/blog'
 
+export async function generateStaticParams() {
+  const tags = await getAllTags()
+  return tags.map((tag) => ({
+    tag: tag.name,
+  }))
+}
+
 export default async function TagPage({
   params,
 }: {
@@ -43,7 +50,7 @@ export default async function TagPage({
                 </div>
                 <p className="mb-4 text-muted-foreground">{post.excerpt}</p>
                 <div className="flex flex-wrap gap-2">
-                  {post.tags.map((tag) => (
+                  {post.tags?.map((tag) => (
                     <Link
                       key={tag}
                       href={`/blog/tag/${tag}`}
