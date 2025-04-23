@@ -12,7 +12,16 @@ const nextConfig = {
   },
   eslint: {
     ignoreDuringBuilds: true
-  }
+  },
+  // Generate a static version of the API route
+  async rewrites() {
+    return [
+      {
+        source: '/api/posts',
+        destination: '/api/posts.json',
+      },
+    ]
+  },
 }
 
 module.exports = nextConfig 
