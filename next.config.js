@@ -4,8 +4,9 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  basePath: '/P_Page',
-  assetPrefix: '/P_Page/',
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH || '/P_Page',
+  assetPrefix: process.env.NEXT_PUBLIC_BASE_PATH || '/P_Page',
+  trailingSlash: true,
 }
 
 module.exports = nextConfig 
