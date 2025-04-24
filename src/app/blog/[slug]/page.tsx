@@ -5,6 +5,7 @@ import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
 import rehypeHighlight from 'rehype-highlight'
 import Link from 'next/link'
+import { Comments } from '@/components/Comments'
 
 export async function generateStaticParams() {
   const posts = getAllPosts()
@@ -66,6 +67,7 @@ export default function BlogPost({ params }: Props) {
           </div>
         )}
       </div>
+      <Comments slug={params.slug} />
     </article>
   )
 } 

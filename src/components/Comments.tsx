@@ -12,10 +12,10 @@ export function Comments({ slug }: CommentsProps) {
       <div className="giscus-frame">
         <Script
           src="https://giscus.app/client.js"
-          data-repo="[在此填入你的 GitHub 用户名]/[在此填入你的仓库名]"
-          data-repo-id="[在此填入你的仓库 ID]"
-          data-category="[在此填入你的分类名]"
-          data-category-id="[在此填入你的分类 ID]"
+          data-repo="zev-yang/P_Page"
+          data-repo-id="R_kgDOLQxYQ"
+          data-category="Comments"
+          data-category-id="DIC_kwDOLQxYc4CdgqY"
           data-mapping="pathname"
           data-strict="0"
           data-reactions-enabled="1"
