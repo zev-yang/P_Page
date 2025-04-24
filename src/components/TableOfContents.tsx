@@ -24,7 +24,7 @@ export function TableOfContents({ items }: TableOfContentsProps) {
             >
               {item.title}
             </button>
-            {item.children && renderItems(item.children, level + 1)}
+            {item.items && renderItems(item.items, level + 1)}
           </li>
         ))}
       </ul>

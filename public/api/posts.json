@@ -1,0 +1,30 @@
+[
+  {
+    "slug": "getting-started-with-nextjs",
+    "title": "Next.js 入门指南",
+    "date": "2024/4/23",
+    "excerpt": "学习如何使用 Next.js 构建现代化的 Web 应用。",
+    "content": "\r\n# Next.js 入门指南\r\n\r\nNext.js 是一个基于 React 的全栈框架，它提供了许多开箱即用的功能，让开发变得更加简单和高效。\r\n\r\n## 为什么选择 Next.js？\r\n\r\n- 服务器端渲染 (SSR)\r\n- 静态站点生成 (SSG)\r\n- 自动代码分割\r\n- 文件系统路由\r\n- API 路由支持\r\n\r\n## 开始使用\r\n\r\n1. 创建新项目：\r\n\r\n```bash\r\nnpx create-next-app@latest my-app\r\n```\r\n\r\n2. 运行开发服务器：\r\n\r\n```bash\r\ncd my-app\r\nnpm run dev\r\n```\r\n\r\n## 基本概念\r\n\r\n### 页面和路由\r\n\r\n在 Next.js 中，页面是基于文件系统的路由。每个文件对应一个路由：\r\n\r\n- `pages/index.js` -> `/`\r\n- `pages/about.js` -> `/about`\r\n- `pages/blog/[slug].js` -> `/blog/:slug`\r\n\r\n### 数据获取\r\n\r\nNext.js 提供了多种数据获取方法：\r\n\r\n```javascript\r\n// 服务器端渲染\r\nexport async function getServerSideProps() {\r\n  const res = await fetch('https://api.example.com/data')\r\n  const data = await res.json()\r\n  return { props: { data } }\r\n}\r\n\r\n// 静态生成\r\nexport async function getStaticProps() {\r\n  const res = await fetch('https://api.example.com/data')\r\n  const data = await res.json()\r\n  return { props: { data } }\r\n}\r\n```\r\n\r\n## 最佳实践\r\n\r\n1. 使用 TypeScript 进行类型检查\r\n2. 采用组件化开发\r\n3. 优化图片和字体加载\r\n4. 实现响应式设计\r\n5. 注重性能优化\r\n\r\n## 结论\r\n\r\nNext.js 是一个强大的框架，它能够帮助我们快速构建高质量的 Web 应用。通过合理使用其提供的功能，我们可以显著提高开发效率和用户体验。 ",
+    "readingTime": "2 min read",
+    "tags": [
+      "Next.js",
+      "React",
+      "Web开发",
+      "教程"
+    ],
+    "category": "教程"
+  },
+  {
+    "slug": "hello-world",
+    "title": "Hello World",
+    "date": "2024/2/20",
+    "excerpt": "Welcome to my blog! This is my first post.",
+    "content": "\r\n# Hello World!\r\n\r\nWelcome to my blog! This is my first post, and I'm excited to share my thoughts and experiences with you.\r\n\r\n## What to Expect\r\n\r\nIn this blog, I'll be writing about:\r\n\r\n- Web Development\r\n- React and Next.js\r\n- TypeScript\r\n- Best Practices\r\n- And more!\r\n\r\n## Stay Connected\r\n\r\nFeel free to follow me on [GitHub](https://github.com/zev-yang) to stay updated with my latest projects and blog posts.\r\n\r\n## Code Example\r\n\r\nHere's a simple React component:\r\n\r\n```tsx\r\nfunction Greeting({ name }: { name: string }) {\r\n  return (\r\n    <div className=\"text-center\">\r\n      <h1 className=\"text-2xl font-bold\">\r\n        Hello, {name}!\r\n      </h1>\r\n    </div>\r\n  )\r\n}\r\n```\r\n\r\nI hope you find the content here helpful and interesting! ",
+    "readingTime": "1 min read",
+    "tags": [
+      "introduction",
+      "blog"
+    ],
+    "category": "Uncategorized"
+  }
+]
